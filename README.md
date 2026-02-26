@@ -378,11 +378,43 @@ kubectl get pods -n hello-openshift -o wide
 
 ## Next Steps
 
-1. **Modify the application**: Edit `deployment.yaml` in your GitHub repo and watch ArgoCD sync the changes
-2. **Add more manifests**: Create additional Kubernetes resources in your repo
-3. **Explore ArgoCD UI**: Access the ArgoCD web interface for visual management
-4. **Set up webhooks**: Configure GitHub webhooks for instant sync
-5. **Create multiple applications**: Deploy different apps to different namespaces
+### 1. Test GitOps in Action: Update the Application
+
+The most important step to understand GitOps is to see it in action. Let's update the application by changing the container image version.
+
+**Edit `deployment.yaml` in your GitHub repo:**
+
+Change this line:
+```yaml
+image: fspiess31/hello-openshift:1.0.0
+```
+
+To this line:
+```yaml
+image: fspiess31/hello-openshift:1.0.1
+```
+
+**What happens next:**
+1. Commit and push the change to GitHub
+2. Within 3 minutes (or instantly with webhooks), ArgoCD detects the change
+3. ArgoCD automatically pulls the new image version
+4. The deployment is updated with zero manual intervention
+5. Test with curl to see the new version:
+
+```bash
+kubectl run curl-test --image=curlimages/curl:latest --rm -i --restart=Never -- curl -s http://hello-openshift.hello-openshift.svc.cluster.local
+```
+
+You should see: `Hello OpenShift! Version: 1.0.1`
+
+**This demonstrates the core GitOps principle:** Git is the single source of truth. Change Git, and your cluster automatically reflects those changes.
+
+### 2. Additional Learning Steps
+
+- **Add more manifests**: Create additional Kubernetes resources in your repo
+- **Explore ArgoCD UI**: Access the ArgoCD web interface for visual management
+- **Set up webhooks**: Configure GitHub webhooks for instant sync
+- **Create multiple applications**: Deploy different apps to different namespaces
 
 ---
 
