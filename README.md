@@ -102,7 +102,7 @@ spec:
     path: .
   destination:
     server: https://kubernetes.default.svc
-    namespace: hello-openshift
+    namespace: argocd-tutorial
   syncPolicy:
     automated:
       prune: true
@@ -171,7 +171,7 @@ hello-openshift   Synced        Healthy
 Check all resources in the target namespace:
 
 ```bash
-kubectl get all -n hello-openshift
+kubectl get all -n argocd-tutorial
 ```
 
 **Expected output:**
@@ -193,19 +193,19 @@ replicaset.apps/hello-openshift-xxxxx        1         1         1       1m
 
 1. **Pod status:**
 ```bash
-kubectl get pods -n hello-openshift
+kubectl get pods -n argocd-tutorial
 ```
 Should show `Running` and `1/1` Ready.
 
 2. **Service details:**
 ```bash
-kubectl get svc -n hello-openshift
+kubectl get svc -n argocd-tutorial
 ```
 Should show the ClusterIP and port 80.
 
 3. **Deployment status:**
 ```bash
-kubectl get deployment -n hello-openshift
+kubectl get deployment -n argocd-tutorial
 ```
 Should show `1/1` replicas available.
 
@@ -216,7 +216,7 @@ Should show `1/1` replicas available.
 Test the service from within the cluster:
 
 ```bash
-kubectl run curl-test --image=curlimages/curl:latest --rm -i --restart=Never -- curl -s http://hello-openshift.hello-openshift.svc.cluster.local
+kubectl run curl-test --image=curlimages/curl:latest --rm -i --restart=Never -- curl -s http://hello-openshift.argocd-tutorial.svc.cluster.local
 ```
 
 **Expected output:**
@@ -231,7 +231,7 @@ pod "curl-test" deleted
 - `--rm` - Deletes the pod after execution
 - `-i` - Shows output interactively
 - `--restart=Never` - Runs as a one-time job
-- `curl -s http://hello-openshift.hello-openshift.svc.cluster.local` - Makes HTTP request to the service
+- `curl -s http://hello-openshift.argocd-tutorial.svc.cluster.local` - Makes HTTP request to the service
 
 **Service DNS format:** `<service-name>.<namespace>.svc.cluster.local`
 
@@ -263,7 +263,7 @@ Synced - Succeeded
 Run the curl test again to verify the application is still working:
 
 ```bash
-kubectl run curl-test --image=curlimages/curl:latest --rm -i --restart=Never -- curl -s http://hello-openshift.hello-openshift.svc.cluster.local
+kubectl run curl-test --image=curlimages/curl:latest --rm -i --restart=Never -- curl -s http://hello-openshift.argocd-tutorial.svc.cluster.local
 ```
 
 **Note:** If the version number changes, it means ArgoCD synced a different version from Git.
@@ -321,7 +321,7 @@ This will:
 
 Verify cleanup:
 ```bash
-kubectl get all -n hello-openshift
+kubectl get all -n argocd-tutorial
 ```
 
 ---
@@ -344,24 +344,24 @@ kubectl patch app hello-openshift -n argocd --type merge -p '{"metadata":{"annot
 
 **Check pod logs:**
 ```bash
-kubectl logs -n hello-openshift -l app=hello-openshift
+kubectl logs -n argocd-tutorial -l app=hello-openshift
 ```
 
 **Check pod events:**
 ```bash
-kubectl describe pod -n hello-openshift -l app=hello-openshift
+kubectl describe pod -n argocd-tutorial -l app=hello-openshift
 ```
 
 ### Service not responding
 
 **Verify service endpoints:**
 ```bash
-kubectl get endpoints -n hello-openshift
+kubectl get endpoints -n argocd-tutorial
 ```
 
 **Check if pods are ready:**
 ```bash
-kubectl get pods -n hello-openshift -o wide
+kubectl get pods -n argocd-tutorial -o wide
 ```
 
 ---
@@ -402,7 +402,7 @@ image: fspiess31/hello-openshift:1.0.1
 5. Test with curl to see the new version:
 
 ```bash
-kubectl run curl-test --image=curlimages/curl:latest --rm -i --restart=Never -- curl -s http://hello-openshift.hello-openshift.svc.cluster.local
+kubectl run curl-test --image=curlimages/curl:latest --rm -i --restart=Never -- curl -s http://hello-openshift.argocd-tutorial.svc.cluster.local
 ```
 
 You should see: `Hello OpenShift! Version: 1.0.1`
